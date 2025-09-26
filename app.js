@@ -1,8 +1,19 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const path = require('path');
+const mongoose = require('mongoose');
 const app = express();
 const PORT = 3000;
+
+// Подключение к MongoDB Atlas
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+
+// Модель поста
+const postSchema = new mongoose.Schema({
+    author: String,
+    text: String
+});
+const Post = mongoose.model('Post', postSchema);
 
 // Инициализация пустого массива постов
 let posts = [];
@@ -28,17 +39,18 @@ app.post('/theme', (req, res) => {
     res.sendStatus(200);
 });
 
-// API: получить список постов (только из памяти)
-app.get('/api/posts', (req, res) => {
+// API: получить список постов
+app.get('/api/posts', async (req, res) => {
+    const posts = await Post.find();
     res.json(posts);
 });
 
-// API: создать новый пост (добавляет в память)
-app.post('/api/posts', express.json(), (req, res) => {
+// API: создать новый пост
+app.post('/api/posts', express.json(), async (req, res) => {
     const { author, text } = req.body;
     if (author && text) {
-        const id = posts.length ? posts[posts.length - 1].id + 1 : 1;
-        posts.push({ id, author, text });
+        const post = new Post({ author, text });
+        await post.save();
         res.status(200).json({ message: 'Пост успешно создан' });
     } else {
         res.status(400).json({ message: 'author и text обязательны' });
