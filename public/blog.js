@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
             postsList.innerHTML = '';
             posts.forEach(post => {
                 const li = document.createElement('li');
-                li.innerHTML = `<strong>${post.author}:</strong> ${post.text}`;
+                li.innerHTML = `<strong>${post.postid} ${post.author}:</strong> ${post.text}`;
                 postsList.appendChild(li);
             });
         });
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 postsList.innerHTML = '';
                 posts.forEach(post => {
                     const li = document.createElement('li');
-                    li.innerHTML = `<strong>${post.author}:</strong> ${post.text}`;
+                    li.innerHTML = `<strong>${post.postid} ${post.author}:</strong> ${post.text}`;
                     postsList.appendChild(li);
                 });
             });
