@@ -81,11 +81,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Работа с API
     const postsList = document.getElementById('posts-list');
     function renderPosts(posts) {
+        // Сортировка по убыванию postid (новые выше)
+        posts.sort((a, b) => b.postid - a.postid);
         postsList.innerHTML = '';
         posts.forEach(post => {
             const div = document.createElement('div');
             div.className = 'post';
             div.innerHTML = `<strong>#${post.postid} ${post.author}</strong><p>${post.text}</p>`;
+            div.style.cursor = 'pointer';
+            div.onclick = () => {
+                window.location.href = `/post/${post.postid}`;
+            };
             postsList.appendChild(div);
         });
     }
