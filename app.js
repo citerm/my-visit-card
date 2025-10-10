@@ -6,7 +6,8 @@ const app = express();
 const PORT = 3000;
 
 // Подключение к MongoDB Atlas
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.MONGODB_URI);
+
 
 // Модель поста
 const postSchema = new mongoose.Schema({
