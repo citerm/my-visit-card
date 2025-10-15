@@ -22,7 +22,8 @@ const commentSchema = new mongoose.Schema({
     commentid: Number,
     postid: Number,
     author: String,
-    text: String
+    text: String,
+    visible: { type: Boolean, default: true }
 });
 const Comment = mongoose.model('Comment', commentSchema);
 
@@ -83,7 +84,7 @@ app.get('/post/:postid', async (req, res) => {
 // API: получить комментарии к посту (от новых к старым)
 app.get('/api/comments/:postid', async (req, res) => {
     const postid = Number(req.params.postid);
-    const comments = await Comment.find({ postid }).sort({ commentid: -1 });
+    const comments = await Comment.find({ postid, visible: true }).sort({ commentid: -1 });
     res.json(comments);
 });
 
@@ -115,6 +116,21 @@ app.post('/api/posts/:postid/hide', express.json(), async (req, res) => {
 app.post('/api/migrate-visible', async (req, res) => {
     await Post.updateMany({}, { $set: { visible: true } });
     res.json({ message: 'Миграция завершена: всем постам установлен visible=true' });
+});
+
+app.post('/api/comments/:postid/:commentid/hide', express.json(), async (req, res) => {
+    const postid = Number(req.params.postid);
+    const commentid = Number(req.params.commentid);
+    const comment = await Comment.findOne({ postid, commentid });
+    if (!comment) return res.status(404).json({ message: 'Комментарий не найден' });
+    comment.visible = false;
+    await comment.save();
+    res.status(200).json({ message: 'Комментарий скрыт' });
+});
+
+app.post('/api/migrate-comments-visible', async (req, res) => {
+    await Comment.updateMany({}, { $set: { visible: true } });
+    res.json({ message: 'Миграция завершена: всем комментариям установлен visible=true' });
 });
 
 // app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
