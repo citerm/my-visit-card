@@ -133,6 +133,17 @@ app.post('/api/migrate-comments-visible', async (req, res) => {
     res.json({ message: 'Миграция завершена: всем комментариям установлен visible=true' });
 });
 
+app.post('/api/posts/:postid/edit', express.json(), async (req, res) => {
+    const postid = Number(req.params.postid);
+    const { author, text } = req.body;
+    const post = await Post.findOne({ postid });
+    if (!post) return res.status(404).json({ message: 'Пост не найден' });
+    post.author = author;
+    post.text = text;
+    await post.save();
+    res.status(200).json({ message: 'Пост обновлен' });
+});
+
 // app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
 
 module.exports = app;
