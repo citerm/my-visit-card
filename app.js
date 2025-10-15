@@ -12,7 +12,8 @@ mongoose.connect(process.env.MONGODB_URI);
 const postSchema = new mongoose.Schema({
     postid: Number,
     author: String,
-    text: String
+    text: String,
+    visible: { type: Boolean, default: true }
 });
 const Post = mongoose.model('Post', postSchema);
 
@@ -51,7 +52,7 @@ app.post('/theme', (req, res) => {
 
 // API: получить список постов
 app.get('/api/posts', async (req, res) => {
-    const posts = await Post.find();
+    const posts = await Post.find({ visible: true });
     res.json(posts);
 });
 
@@ -62,7 +63,7 @@ app.post('/api/posts', express.json(), async (req, res) => {
         // Получаем максимальный postid
         const lastPost = await Post.findOne().sort({ postid: -1 });
         const postid = lastPost ? lastPost.postid + 1 : 1;
-        const post = new Post({ postid, author, text });
+        const post = new Post({ postid, author, text, visible: true });
         await post.save();
         res.status(200).json({ message: 'Пост успешно создан' });
     } else {
@@ -99,6 +100,21 @@ app.post('/api/comments/:postid', express.json(), async (req, res) => {
     } else {
         res.status(400).json({ message: 'author и text обязательны' });
     }
+});
+
+app.post('/api/posts/:postid/hide', express.json(), async (req, res) => {
+    const postid = Number(req.params.postid);
+    const post = await Post.findOne({ postid });
+    if (!post) return res.status(404).json({ message: 'Пост не найден' });
+    post.visible = false;
+    await post.save();
+    res.status(200).json({ message: 'Пост скрыт' });
+});
+
+// API-эндпоинт для миграции: всем постам установить visible=true
+app.post('/api/migrate-visible', async (req, res) => {
+    await Post.updateMany({}, { $set: { visible: true } });
+    res.json({ message: 'Миграция завершена: всем постам установлен visible=true' });
 });
 
 // app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
