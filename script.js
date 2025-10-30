@@ -30,29 +30,76 @@ const hobbies = [
     { name: "Спорт", description: "Плавание и велосипед" }
 ];
 
-// Вывод переменных в консоль
-console.log("Имя:", myName);
-console.log("Год рождения:", birthYear);
-console.log("Возраст:", age);
-console.log("Темная тема по умолчанию:", isDarkDefault);
-console.log("Профиль:", profile);
-console.log("Увлечения:", hobbies);
+// Приветствие по времени суток
+function getGreetingMessage() {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Доброе утро";
+    else if (hour < 18) return "Добрый день";
+    else return "Добрый вечер";
+}
 
-// Плавная прокрутка для навигации
-document.querySelectorAll('nav a').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('href');
-        const targetElement = document.querySelector(targetId);
-        targetElement.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-        });
-    });
-});
+// Форматирование даты и времени
+function formatDateTime(date) {
+    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const yyyy = date.getFullYear();
+    const hh = String(date.getHours()).padStart(2, '0');
+    const min = String(date.getMinutes()).padStart(2, '0');
+    const ss = String(date.getSeconds()).padStart(2, '0');
+    return `${dd}.${mm}.${yyyy} ${hh}:${min}:${ss}`;
+}
 
-// Загрузка сохраненной темы
+// Заполнение разделов при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', savedTheme);
+    // Тема
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    }
+
+    // Приветствие
+    const greeting = getGreetingMessage();
+    const greetingText = `${greeting}, посетитель!`;
+    document.getElementById('greeting').textContent = greetingText;
+
+    // Интерактив: приветствие посетителя
+    const visitorForm = document.getElementById('visitor-form');
+    const visitorGreeting = document.getElementById('visitor-greeting');
+    visitorForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('visitor-name').value.trim();
+        if (name) {
+            const greetingText = `${getGreetingMessage()}, ${name}!`;
+            document.getElementById('greeting').textContent = greetingText;
+            visitorGreeting.textContent = `Привет, ${name}! Добро пожаловать на мой сайт.`;
+        } else {
+            const greetingText = `${getGreetingMessage()}, посетитель!`;
+            document.getElementById('greeting').textContent = greetingText;
+            visitorGreeting.textContent = '';
+        }
+    });
+
+    // Заполнение раздела "О себе"
+    const aboutEl = document.getElementById('about-me-text');
+    if (aboutEl) {
+        aboutEl.textContent = `Имя: ${profile.firstName} ${profile.lastName}, возраст: ${profile.age}, город: ${profile.city}. ${profile.bio}`;
+    }
+
+    // Заполнение списка увлечений
+    const hobbyList = document.getElementById('hobbyList');
+    const hobbyPlaceholder = document.getElementById('hobby-placeholder');
+    if (hobbyList && hobbies.length > 0) {
+        hobbyList.innerHTML = '';
+        hobbies.forEach(hobby => {
+            const li = document.createElement('li');
+            li.textContent = `${hobby.name} — ${hobby.description}`;
+            hobbyList.appendChild(li);
+        });
+        if (hobbyPlaceholder) hobbyPlaceholder.style.display = 'none';
+    }
+
+    // Текущая дата и время в футере
+    const currentDateSpan = document.getElementById('currentDate');
+    const now = new Date();
+    currentDateSpan.textContent = formatDateTime(now);
 });

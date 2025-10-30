@@ -57,6 +57,8 @@
         #visitor-form button { padding: 8px 16px; border-radius: 5px; border: none; background: var(--primary-color); color: #fff; font-weight: bold; cursor: pointer; }
         #visitor-greeting { margin-top: 12px; font-style: italic; }
         #theme-btn { margin-top: 0; }
+        #greeting { margin-top: 24px; font-size: 1.3em; font-weight: bold; }
+        #currentDate { font-style: italic; }
     </style>
 </head>
 <body>
@@ -66,6 +68,8 @@
         </nav>
     </header>
     <main class="container">
+        <!-- Приветствие -->
+        <h2 id="greeting"></h2>
         <!-- Заголовок с именем и фото -->
         <section id="hero">
             <img id="profile-photo" src="assets/Photo.png" alt="Фото профиля">
@@ -76,7 +80,7 @@
         <!-- Блок "О себе" -->
         <section id="about-me">
             <h2>О себе</h2>
-            <p>Я начинающий веб-разработчик, люблю создавать современные сайты и изучать новые технологии. Всегда открыт для интересных проектов и общения.</p>
+            <p id="about-me-text"></p>
         </section>
         <!-- Секция "Интересы" -->
         <section id="hobbies-section">
@@ -97,43 +101,9 @@
     </main>
     <footer>
         <div class="container">
-            <p>&copy; 2025 Батин Никита</p>
+            <p>&copy; 2025 Батин Никита | <span id="currentDate"></span></p>
         </div>
     </footer>
-    <script>
-        // Смена темы
-        function toggleTheme() {
-            const theme = document.documentElement.getAttribute('data-theme');
-            const newTheme = theme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-        }
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                document.documentElement.setAttribute('data-theme', savedTheme);
-            }
-            // Интерактив: приветствие посетителя
-            const visitorForm = document.getElementById('visitor-form');
-            const visitorGreeting = document.getElementById('visitor-greeting');
-            visitorForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const name = document.getElementById('visitor-name').value.trim();
-                if (name) {
-                    visitorGreeting.textContent = `Привет, ${name}! Добро пожаловать на мой сайт.`;
-                } else {
-                    visitorGreeting.textContent = '';
-                }
-            });
-            // Заглушка для увлечений
-            const hobbyList = document.getElementById('hobbyList');
-            const hobbyPlaceholder = document.getElementById('hobby-placeholder');
-            if (hobbyList.children.length === 0) {
-                hobbyPlaceholder.style.display = 'block';
-            } else {
-                hobbyPlaceholder.style.display = 'none';
-            }
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
