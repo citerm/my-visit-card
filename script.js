@@ -69,6 +69,16 @@ class Person {
 // Создание экземпляра класса
 const me = new Person("Никита", "Батин", 1991, "Москва", "Я начинающий веб-разработчик, люблю создавать современные сайты и изучать новые технологии.");
 
+// Обновление приветствия
+function updateGreeting(name) {
+    const greeting = getGreetingMessage();
+    const greetingText = name ? `${greeting}, ${name}!` : `${greeting}, посетитель!`;
+    document.getElementById('greeting').textContent = greetingText;
+    document.getElementById('visitor-greeting').textContent = name
+        ? `Привет, ${name}! Добро пожаловать на мой сайт.`
+        : '';
+}
+
 // Заполнение разделов при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
     // Тема
@@ -96,6 +106,23 @@ document.addEventListener('DOMContentLoaded', function() {
             const greetingText = `${getGreetingMessage()}, посетитель!`;
             document.getElementById('greeting').textContent = greetingText;
             visitorGreeting.textContent = '';
+        }
+    });
+
+    // Интерактив: поле ввода имени и кнопка OK
+    const userNameInput = document.getElementById('userNameInput');
+    const saveNameBtn = document.getElementById('saveNameBtn');
+
+    function handleNameInput() {
+        const name = userNameInput.value.trim();
+        updateGreeting(name);
+    }
+
+    saveNameBtn.addEventListener('click', handleNameInput);
+
+    userNameInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            handleNameInput();
         }
     });
 
