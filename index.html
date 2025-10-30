@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Проект 406</title>
+    <title>Персональный сайт</title>
     <link rel="stylesheet" href="style.css">
     <style>
         .tabs { display: flex; gap: 1rem; margin-top: 80px; }
@@ -17,42 +17,14 @@
         th { background: var(--primary-color); color: #fff; }
         .nav-tabs {
             display: flex;
-            justify-content: center;
+            justify-content: flex-end;
             align-items: center;
             position: relative;
             background: var(--primary-color);
             padding: 12px 0;
         }
-        #blog-btn {
-            position: absolute;
-            left: 32px;
-            top: 50%;
-            transform: translateY(-50%);
-            padding: 10px 20px;
-            border-radius: 5px;
-            background: var(--card-bg);
-            color: var(--text-color);
-            border: none;
-            font-weight: bold;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        #blog-btn:hover {
-            background: var(--primary-color);
-            color: #fff;
-        }
-        .tabs-list {
-            display: flex;
-            gap: 1rem;
-            margin: 0 auto;
-            padding: 0;
-            list-style: none;
-        }
         #theme-btn {
-            position: absolute;
-            right: 32px;
-            top: 50%;
-            transform: translateY(-50%);
+            margin-right: 32px;
             padding: 10px 20px;
             border-radius: 5px;
             background: var(--card-bg);
@@ -65,157 +37,101 @@
             background: var(--primary-color);
             color: #fff;
         }
+        .tabs-list {
+            display: flex;
+            gap: 1rem;
+            margin: 0 auto;
+            padding: 0;
+            list-style: none;
+        }
         #readme-intro {
             margin-bottom: 0.5rem;
         }
+        .container { max-width: 800px; margin: 0 auto; padding: 32px; }
+        #profile-photo { width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 2px solid var(--primary-color); }
+        #hero { display: flex; align-items: center; gap: 2rem; margin-top: 48px; }
+        #about-me { margin-top: 32px; }
+        #hobbies-section { margin-top: 32px; }
+        #interactive-section { margin-top: 32px; }
+        #visitor-form input { padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin-right: 8px; }
+        #visitor-form button { padding: 8px 16px; border-radius: 5px; border: none; background: var(--primary-color); color: #fff; font-weight: bold; cursor: pointer; }
+        #visitor-greeting { margin-top: 12px; font-style: italic; }
+        #theme-btn { margin-top: 0; }
     </style>
 </head>
 <body>
     <header>
         <nav class="nav-tabs">
-            <a href="blog.html" id="blog-btn">Блог</a>
-            <ul class="tabs-list">
-                <li><button class="tab-btn active" data-tab="about">О проекте</button></li>
-                <li><button class="tab-btn" data-tab="authors">Авторы</button></li>
-            </ul>
             <button id="theme-btn" onclick="toggleTheme()">Сменить тему</button>
         </nav>
     </header>
-
-    <main>
+    <main class="container">
+        <!-- Заголовок с именем и фото -->
         <section id="hero">
-            <div class="container">
-                <h1>Проект 406</h1>
-                <div id="readme-intro"></div>
+            <img id="profile-photo" src="assets/Photo.png" alt="Фото профиля">
+            <div>
+                <h1 id="my-name">Батин Никита</h1>
             </div>
         </section>
-        <div class="container">
-            <div id="about" class="tab-content active">
-                <h2>О проекте</h2>
-                <div id="readme-about"></div>
-            </div>
-            <div id="authors" class="tab-content">
-                <h2>Авторы</h2>
-                <div id="readme-authors"></div>
-            </div>
-        </div>
+        <!-- Блок "О себе" -->
+        <section id="about-me">
+            <h2>О себе</h2>
+            <p>Я начинающий веб-разработчик, люблю создавать современные сайты и изучать новые технологии. Всегда открыт для интересных проектов и общения.</p>
+        </section>
+        <!-- Секция "Интересы" -->
+        <section id="hobbies-section">
+            <h2>Мои увлечения</h2>
+            <ul id="hobbyList"></ul>
+            <div id="hobby-placeholder">Пока список увлечений пуст.</div>
+        </section>
+        <!-- Блок интерактивных элементов -->
+        <section id="interactive-section">
+            <h2>Интерактив</h2>
+            <form id="visitor-form">
+                <label for="visitor-name">Ваше имя:</label>
+                <input type="text" id="visitor-name" name="visitor-name" placeholder="Введите имя">
+                <button type="submit">Отправить</button>
+            </form>
+            <div id="visitor-greeting"></div>
+        </section>
     </main>
     <footer>
         <div class="container">
-            <div id="readme-footer"></div>
-            <p>&copy; 2025 Проект 406</p>
+            <p>&copy; 2025 Батин Никита</p>
         </div>
     </footer>
-
     <script>
-    // Табы
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById(btn.dataset.tab).classList.add('active');
-        });
-    });
-
-    // Смена темы
-    function toggleTheme() {
-        const theme = document.documentElement.getAttribute('data-theme');
-        const newTheme = theme === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme); // сохраняем тему
-    }
-
-    // При загрузке страницы — применяем сохранённую тему
-    document.addEventListener('DOMContentLoaded', () => {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            document.documentElement.setAttribute('data-theme', savedTheme);
+        // Смена темы
+        function toggleTheme() {
+            const theme = document.documentElement.getAttribute('data-theme');
+            const newTheme = theme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
         }
-    });
-
-    // Загрузка README.md и вывод по блокам
-    fetch('README.md')
-        .then(response => response.text())
-        .then(text => {
-            // Вводная часть до "## Об этом проекте"
-            const introMatch = text.match(/([\s\S]*?)## Об этом проекте/);
-            if (introMatch) {
-                let introText = introMatch[1]
-                    .split('\n')
-                    .filter(line => line.trim() !== '---')
-                    .join('\n');
-                let introHtml = introText
-                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/\n/g, '<br>');
-                introHtml = introHtml.replace(/(<br>\s*)+$/,'')
-                document.getElementById('readme-intro').innerHTML = introHtml;
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
             }
-
-            // "Об этом проекте" как список
-            const aboutMatch = text.match(/## Об этом проекте([\s\S]*?)## Авторы/);
-            if (aboutMatch) {
-                const aboutSection = aboutMatch[1].trim();
-                const listMatch = aboutSection.match(/(Изучаем)\s*([\s\S]*)/);
-                if (listMatch) {
-                    const intro = listMatch[1]; // "Изучаем"
-                    const items = listMatch[2]
-                        .split('\n')
-                        .map(line => line.trim())
-                        .filter(line => line.startsWith('-'))
-                        .map(line => line.replace(/^- /, ''));
-                    let html = `<div>${intro}</div><ul>`;
-                    items.forEach(item => html += `<li>${item}</li>`);
-                    html += '</ul>';
-                    document.getElementById('readme-about').innerHTML = html;
+            // Интерактив: приветствие посетителя
+            const visitorForm = document.getElementById('visitor-form');
+            const visitorGreeting = document.getElementById('visitor-greeting');
+            visitorForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const name = document.getElementById('visitor-name').value.trim();
+                if (name) {
+                    visitorGreeting.textContent = `Привет, ${name}! Добро пожаловать на мой сайт.`;
                 } else {
-                    document.getElementById('readme-about').textContent = aboutSection;
+                    visitorGreeting.textContent = '';
                 }
-            }
-
-            // "Авторы" как таблица и текст после таблицы
-            const authorsMatch = text.match(/## Авторы([\s\S]*)/);
-            if (authorsMatch) {
-                const authorsSection = authorsMatch[1].trim();
-                const tableStart = authorsSection.indexOf('| Имя');
-                let tableEnd = -1;
-                if (tableStart !== -1) {
-                    const afterTable = authorsSection.slice(tableStart).split('\n');
-                    let tableLines = [];
-                    for (let i = 0; i < afterTable.length; i++) {
-                        if (afterTable[i].trim() === '' && i > 2) {
-                            tableEnd = tableStart + afterTable.slice(0, i).join('\n').length;
-                            break;
-                        }
-                        tableLines.push(afterTable[i]);
-                    }
-                    if (tableLines.length >= 3) {
-                        let html = '<table><thead><tr>';
-                        tableLines[0].split('|').forEach((cell, i) => {
-                            if (i !== 0 && cell.trim()) html += `<th>${cell.trim()}</th>`;
-                        });
-                        html += '</tr></thead><tbody>';
-                        for (let i = 2; i < tableLines.length; i++) {
-                            const cols = tableLines[i].split('|').map(c => c.trim()).filter(Boolean);
-                            if (cols.length) {
-                                html += '<tr>';
-                                cols.forEach(cell => html += `<td>${cell}</td>`);
-                                html += '</tr>';
-                            }
-                        }
-                        html += '</tbody></table>';
-                        document.getElementById('readme-authors').innerHTML = html;
-                    } else {
-                        document.getElementById('readme-authors').textContent = tableLines.join('\n');
-                    }
-                    // Текст после таблицы
-                    let afterText = authorsSection.slice(tableStart + tableLines.join('\n').length).trim();
-                    if (afterText) {
-                        document.getElementById('readme-footer').innerHTML = afterText.replace(/\n/g, '<br>');
-                    }
-                } else {
-                    document.getElementById('readme-authors').textContent = authorsSection;
-                }
+            });
+            // Заглушка для увлечений
+            const hobbyList = document.getElementById('hobbyList');
+            const hobbyPlaceholder = document.getElementById('hobby-placeholder');
+            if (hobbyList.children.length === 0) {
+                hobbyPlaceholder.style.display = 'block';
+            } else {
+                hobbyPlaceholder.style.display = 'none';
             }
         });
     </script>
