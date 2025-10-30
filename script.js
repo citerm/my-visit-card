@@ -49,6 +49,26 @@ function formatDateTime(date) {
     return `${dd}.${mm}.${yyyy} ${hh}:${min}:${ss}`;
 }
 
+// Класс для демонстрации
+class Person {
+    constructor(firstName, lastName, birthYear, city, bio) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthYear = birthYear;
+        this.city = city;
+        this.bio = bio;
+    }
+    getAge() {
+        return new Date().getFullYear() - this.birthYear;
+    }
+    getInfo() {
+        return `Имя: ${this.firstName} ${this.lastName}, город: ${this.city}. Мне ${this.getAge()} лет. ${this.bio}`;
+    }
+}
+
+// Создание экземпляра класса
+const me = new Person("Никита", "Батин", 1991, "Москва", "Я начинающий веб-разработчик, люблю создавать современные сайты и изучать новые технологии.");
+
 // Заполнение разделов при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
     // Тема
@@ -79,10 +99,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Заполнение раздела "О себе"
+    // Заполнение раздела "О себе" с использованием класса
     const aboutEl = document.getElementById('about-me-text');
     if (aboutEl) {
-        aboutEl.textContent = `Имя: ${profile.firstName} ${profile.lastName}, возраст: ${profile.age}, город: ${profile.city}. ${profile.bio}`;
+        aboutEl.textContent = me.getInfo();
     }
 
     // Заполнение списка увлечений
