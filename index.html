@@ -64,6 +64,17 @@
 <body>
     <header>
         <nav class="nav-tabs">
+            <h2 id="greeting" style="
+                position: absolute;
+                left: 32px;
+                top: 50%;
+                transform: translateY(-50%);
+                margin: 0;
+                font-size: 1.3em;
+                font-weight: bold;
+                color: #fff;
+                z-index: 2;
+            "></h2>
             <button id="theme-btn" onclick="toggleTheme()">Сменить тему</button>
         </nav>
     </header>
@@ -91,10 +102,10 @@
         <!-- Блок интерактивных элементов -->
         <section id="interactive-section">
             <h2>Интерактив</h2>
-            <div>
+            <form id="visitor-form">
                 <input type="text" id="userNameInput" placeholder="Введите ваше имя">
-                <button id="saveNameBtn">OK</button>
-            </div>
+                <button id="saveNameBtn" type="submit">OK</button>
+            </form>
             <div id="visitor-greeting"></div>
         </section>
     </main>
