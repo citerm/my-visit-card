@@ -149,4 +149,31 @@ document.addEventListener('DOMContentLoaded', function() {
     const currentDateSpan = document.getElementById('currentDate');
     const now = new Date();
     currentDateSpan.textContent = formatDateTime(now);
+
+    // Эффект при наведении на фото
+    const photo = document.getElementById('profile-photo');
+    if (photo) {
+        photo.addEventListener('mouseover', () => {
+            photo.style.opacity = '0.7';
+            photo.style.boxShadow = '0 0 16px 4px var(--primary-color)';
+        });
+        photo.addEventListener('mouseout', () => {
+            photo.style.opacity = '1';
+            photo.style.boxShadow = '';
+        });
+    }
+
+    // Эффект при наведении на элементы списка увлечений
+    if (hobbyList) {
+        hobbyList.querySelectorAll('li').forEach(li => {
+            li.addEventListener('mouseover', () => {
+                li.style.background = 'var(--primary-color)';
+                li.style.color = '#fff';
+            });
+            li.addEventListener('mouseout', () => {
+                li.style.background = '';
+                li.style.color = '';
+            });
+        });
+    }
 });
