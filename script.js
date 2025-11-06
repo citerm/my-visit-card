@@ -87,51 +87,48 @@ document.addEventListener('DOMContentLoaded', function() {
         document.documentElement.setAttribute('data-theme', savedTheme);
     }
 
-    // Приветствие
-    const greeting = getGreetingMessage();
-    const greetingText = `${greeting}, посетитель!`;
-    document.getElementById('greeting').textContent = greetingText;
-
-    // Интерактив: приветствие посетителя
-    const visitorForm = document.getElementById('visitor-form');
-    const visitorGreeting = document.getElementById('visitor-greeting');
-    visitorForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const name = document.getElementById('visitor-name').value.trim();
-        if (name) {
-            const greetingText = `${getGreetingMessage()}, ${name}!`;
-            document.getElementById('greeting').textContent = greetingText;
-            visitorGreeting.textContent = `Привет, ${name}! Добро пожаловать на мой сайт.`;
-        } else {
-            const greetingText = `${getGreetingMessage()}, посетитель!`;
-            document.getElementById('greeting').textContent = greetingText;
-            visitorGreeting.textContent = '';
-        }
-    });
-
-    // Кнопка удаления последнего увлечения
-    const removeHobbyBtn = document.getElementById('removeHobbyBtn');
-    if (removeHobbyBtn) {
-        removeHobbyBtn.addEventListener('click', () => {
-            const list = document.getElementById('hobbyList');
-            if (list && list.lastElementChild) {
-                list.removeChild(list.lastElementChild);
-                // Если список стал пустым, показать заглушку
-                if (!list.hasChildNodes()) {
-                    const hobbyPlaceholder = document.getElementById('hobby-placeholder');
-                    if (hobbyPlaceholder) hobbyPlaceholder.style.display = 'block';
-                }
-            }
-        });
+    // --- LocalStorage: приветствие по сохранённому имени ---
+    const savedName = localStorage.getItem('userName');
+    if (savedName) {
+        updateGreeting(savedName);
+        const userNameInput = document.getElementById('userNameInput');
+        if (userNameInput) userNameInput.value = savedName;
+    } else {
+        updateGreeting("");
     }
 
-    // Очистка поля ввода имени после вывода приветствия
+    // --- Cookies: дата последнего визита ---
+    function setLastVisitCookie() {
+        const nowString = new Date().toLocaleString();
+        document.cookie = `lastVisit=${nowString}; path=/; expires=Tue, 31 Dec 2030 00:00:00 GMT`;
+    }
+    function getLastVisitCookie() {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            const [key, value] = cookie.trim().split('=');
+            if (key === 'lastVisit') return value;
+        }
+        return null;
+    }
+    const lastVisit = getLastVisitCookie();
+    if (lastVisit) {
+        const visitorGreeting = document.getElementById('visitor-greeting');
+        if (visitorGreeting) {
+            visitorGreeting.textContent += ` Ваш последний визит: ${lastVisit}`;
+        }
+    }
+    setLastVisitCookie();
+
+    // Интерактив: приветствие посетителя и сохранение имени
     const userNameInput = document.getElementById('userNameInput');
     const saveNameBtn = document.getElementById('saveNameBtn');
     function handleNameInput() {
         const name = userNameInput.value.trim();
         updateGreeting(name);
         userNameInput.value = ""; // очистить поле после сохранения
+        if (name) {
+            localStorage.setItem('userName', name);
+        }
     }
     if (saveNameBtn && userNameInput) {
         saveNameBtn.addEventListener('click', handleNameInput);
@@ -142,6 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Заполнение разделов при загрузке страницы
     // Заполнение раздела "О себе" с использованием класса
     const aboutEl = document.getElementById('about-me-text');
     if (aboutEl) {
@@ -190,6 +188,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 li.style.background = '';
                 li.style.color = '';
             });
+        });
+    }
+
+    // Удаление последнего хобби из списка
+    const removeHobbyBtn = document.getElementById('removeHobbyBtn');
+    if (removeHobbyBtn && hobbyList) {
+        removeHobbyBtn.addEventListener('click', () => {
+            if (hobbyList.lastElementChild) {
+                hobbyList.removeChild(hobbyList.lastElementChild);
+                // Если список пуст, показать заглушку
+                if (!hobbyList.hasChildNodes() && hobbyPlaceholder) {
+                    hobbyPlaceholder.style.display = 'block';
+                }
+            }
         });
     }
 });
