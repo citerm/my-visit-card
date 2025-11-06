@@ -109,22 +109,38 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Интерактив: поле ввода имени и кнопка OK
+    // Кнопка удаления последнего увлечения
+    const removeHobbyBtn = document.getElementById('removeHobbyBtn');
+    if (removeHobbyBtn) {
+        removeHobbyBtn.addEventListener('click', () => {
+            const list = document.getElementById('hobbyList');
+            if (list && list.lastElementChild) {
+                list.removeChild(list.lastElementChild);
+                // Если список стал пустым, показать заглушку
+                if (!list.hasChildNodes()) {
+                    const hobbyPlaceholder = document.getElementById('hobby-placeholder');
+                    if (hobbyPlaceholder) hobbyPlaceholder.style.display = 'block';
+                }
+            }
+        });
+    }
+
+    // Очистка поля ввода имени после вывода приветствия
     const userNameInput = document.getElementById('userNameInput');
     const saveNameBtn = document.getElementById('saveNameBtn');
-
     function handleNameInput() {
         const name = userNameInput.value.trim();
         updateGreeting(name);
+        userNameInput.value = ""; // очистить поле после сохранения
     }
-
-    saveNameBtn.addEventListener('click', handleNameInput);
-
-    userNameInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            handleNameInput();
-        }
-    });
+    if (saveNameBtn && userNameInput) {
+        saveNameBtn.addEventListener('click', handleNameInput);
+        userNameInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleNameInput();
+            }
+        });
+    }
 
     // Заполнение раздела "О себе" с использованием класса
     const aboutEl = document.getElementById('about-me-text');
